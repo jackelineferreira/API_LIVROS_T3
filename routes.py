@@ -8,8 +8,15 @@ bp = Blueprint('livros', __name__)
 @bp.before_app_request
 def create_tables():
     db.create_all()
+    
 
-# Rota para listar todos os livros
+@bp.route("/", methods=["GET"])
+def pagina_inicial():
+    return jsonify({
+        "mensagem": "📚 Bem-vindo à nossa Biblioteca Virtual! Doe um livro e compartilhe conhecimento."
+    }), 200
+
+# listar todos os livros
 @bp.route("/livros", methods=["GET"])
 def listar_livros():
     livros = Livro.query.all()
@@ -21,9 +28,9 @@ def listar_livros():
         "imagem_url": livro.imagem_url
     } for livro in livros]), 200
 
-# Rota para adicionar um novo livro
-@bp.route("/livros", methods=["POST"])
-def adicionar_livro():
+# adicionar um novo livro
+@bp.route("/doar", methods=["POST"])
+def doar_livro():
     dados = request.get_json()
     novo_livro = Livro(
         titulo=dados["titulo"],
